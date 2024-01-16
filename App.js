@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import Header from './components/Header';
 
 export default function App() {
   const appName = "My App"
@@ -7,6 +8,7 @@ export default function App() {
     <View style={styles.container}>
       <Text>Welcome to {appName} 🐶</Text>
       <StatusBar style="auto" />
+      <Header name="My App" version={2}/>
     </View>
   );
 }
