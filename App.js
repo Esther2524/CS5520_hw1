@@ -1,82 +1,66 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useState } from 'react';
-
-import Header from './components/Header';
-import Input from './components/Input';
-import { SafeAreaView } from 'react-native';
+import StartScreen from './screens/StartScreen';
+import FinishScreen from './screens/FinishScreen';
+import LinearGradientWrapper from './components/LinearGradientWrapper';
 
 export default function App() {
-  const appName = "My App"
-
-  const [data, setData] = useState("")
-  const [isVisible, setIsVisible] = useState(false)
-
-  function receiveInput(data) {
-    console.log("receive input from Input.js", data);
-    setData(data);
-    setIsVisible(false);
-  }
-
-  function dismissModal() {
-    setIsVisible(false);
-  }
+  // notes:
+  // These state variables are shared between the StartScreen and FinishScreen.
+  // The StartScreen is responsible for allowing the user to interact and modify these state variables, 
+  // while the FinishScreen needs access to these variables to display results and allow restarting the game.
+  const [userName, setUserName] = useState('');
+  const [userNumber, setUserNumber] = useState('');
+  const [attemptsLeft, setAttemptsLeft] = useState(3);
+  const [generatedNumber, setGeneratedNumber] = useState(
+    Math.floor(Math.random() * 10) + 1020
+  );
+  const [currentScreen, setCurrentScreen] = useState('StartScreen'); // Screen state
+  const [isGameWon, setIsGameWon] = useState(false)
 
 
+  // restart the entire game
+  function restartGame() {
+    setUserName('');
+    setUserNumber('');
+    setGeneratedNumber(Math.floor(Math.random() * 10) + 1020);
+    setAttemptsLeft(3);
+    setIsGameWon(false);
+    setCurrentScreen('StartScreen');
+  };
 
   return (
+    <LinearGradientWrapper>
+      <View style={styles.screen}>
+        {currentScreen == 'StartScreen' && (
+          <StartScreen
+            userName={userName}
+            setUserName={setUserName}
+            userNumber={userNumber}
+            setUserNumber={setUserNumber}
+            attemptsLeft={attemptsLeft}
+            setAttemptsLeft={setAttemptsLeft}
+            generatedNumber={generatedNumber}
+            setCurrentScreen={setCurrentScreen}
+            setIsGameWon={setIsGameWon}
+          />
+        )}
 
-    <SafeAreaView style={styles.container}>
-
-      <View style={styles.topView}>
-        <Text>Welcome to {appName} 🐶</Text>
-        <StatusBar style="auto" />
-        <Header name="My App" version={2} />
-
-        <Button title="add a goal" onPress={() => setIsVisible(true)} />
-        <Input inputHandler={receiveInput} modalVisible={isVisible} dismissModal={dismissModal} />
-
+        {currentScreen == 'FinishScreen' && (
+          <FinishScreen
+            userNumber={userNumber}
+            handleRestart={restartGame}
+            isGameWon={isGameWon} />
+        )}
       </View>
-
-      <View style={styles.bottomView}>
-
-
-        <Text>{data}</Text>
-
-
-      </View>
-
-    </SafeAreaView>
-
-
-
-
-
-
-
+    </LinearGradientWrapper>
   );
 }
 
-
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    backgroundColor: '#fff',
+    padding: 10,
     alignItems: 'center',
-    justifyContent: 'center',
   },
-
-  topView: {
-    flex: 1,
-  },
-
-  bottomView: {
-    flex: 4,
-    backgroundColor: "green",
-  },
-
-  text: {
-    textAlign: "center",
-  },
-
 });
