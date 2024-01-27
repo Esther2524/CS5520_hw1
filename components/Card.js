@@ -13,11 +13,11 @@ export default function Card({ children, style }) {
 const styles = StyleSheet.create({
     card: {
         borderRadius: 20,
-        elevation: 3, // elevation for Android
-        shadowOffset: { width: 4, height: 4 },
+        elevation: 8, // elevation for Android
+        shadowOffset: { width: 0, height: 0 },
         shadowColor: Colors.shadow,
         shadowOpacity: 0.5,
-        shadowRadius: 2,
+        shadowRadius: 5,
         marginHorizontal: 4,
         marginVertical: 3,
         maxWidth: 300,
