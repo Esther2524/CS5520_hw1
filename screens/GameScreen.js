@@ -2,97 +2,81 @@ import { StyleSheet, Text, View, Modal } from 'react-native'
 import React from 'react'
 import Button from '../components/Button'
 import Card from '../components/Card'
+import LinearGradientWrapper from '../components/LinearGradientWrapper'
+import Colors from '../Colors'
 
-export default function GameScreen({ userName, userNumber, isGuessHigher, attemptsLeft
-  , showCorrectGuessModal, dismissCorrectGuessModal, showWrongGuessModal,
+export default function GameScreen({ isModalVisible, userName, userNumber, attemptsLeft,
+  isGuessCorrect, isGuessHigher,
   handleDone, handleGuessAgain }) {
-
-  // The Modal component in React Native covers the whole screen by default, 
-  // and its content is typically aligned to the top. we can adjust your GameScreen component to center the content inside the modals
+  // Notes:
+  // 1. The Modal component in React Native covers the whole screen by default, and its content is typically aligned to the top. 
+  // 2. The LinearGradient should be used directly inside the Modal. It will serve as the background for all the content of the modal.
 
   return (
-    <View style={styles.screen}>
-
-      {/* when the user guess the number wrong, tell them to guess higher or guess lower
-      and how many attemps left*/}
-      <Modal visible={showCorrectGuessModal} transparent={true}>
+    <Modal visible={isModalVisible} transparent={false}>
+      <LinearGradientWrapper>
         <View style={styles.modalContent}>
-          <Card style={styles.modalCardOne}>
-            <Text>Congrats {userName}! You won!</Text>
-            <Button
-              onPress={dismissCorrectGuessModal}
-              title='Thank you'
-              disabled={false}
-              textColor='blue' />
-          </Card>
-        </View>
-      </Modal>
-
-
-      <Modal visible={showWrongGuessModal} transparent={true}>
-        <View style={styles.modalContent}>
-          <Card style={styles.modalCardTwo}>
-            <View style={styles.textContainer}>
-            <Text style={styles.textStyle}>Hello {userName} You have chosen {userNumber}</Text>
-            <Text style={styles.textStyle}>That's not my number</Text>
-            <Text style={styles.textStyle}>{isGuessHigher ? "Guess Lower" : "Guess Higher"}</Text>
-            <Text style={styles.textStyle}>You have {attemptsLeft} attempts left </Text>
-            </View>
-
-            <View style={styles.buttonContainer}>
+          {isGuessCorrect ? (
+            <Card style={styles.cardStyleForCongrats}>
+              <Text style={styles.textStyle}>Congrats {userName}! You won!</Text>
+              <Button
+                onPress={handleDone}
+                title='Thank you!'
+                disabled={false}
+                textColor={Colors.normalButton} />
+            </Card>
+          ) : (
+            <Card style={styles.cardStyle}>
+              <View style={styles.textContainer}>
+                <Text style={styles.textStyle}>Hello {userName}</Text>
+                <Text style={styles.textStyle}>You have chosen {userNumber}</Text>
+                <Text style={styles.textStyle}>That's not my number!</Text>
+                <Text style={styles.textStyle}>{isGuessHigher ? "Guess lower!" : "Guess higher!"}</Text>
+                <Text style={styles.textStyle}>
+                  {attemptsLeft === 0 ? "You have no attempts left!" : `You have ${attemptsLeft} attempts left!`}
+                </Text>
+              </View>
               <Button
                 onPress={handleDone}
                 title="I'm done"
                 disabled={false}
-                textColor='red' />
+                textColor={Colors.doneButton} />
               <Button
                 onPress={handleGuessAgain}
                 title='Let Me Guess Again'
                 disabled={attemptsLeft <= 0}
-                textColor='blue' />
-            </View>
-
-          </Card>
+                textColor={Colors.normalButton} />
+            </Card>
+          )}
         </View>
-      </Modal>
-    </View>
+      </LinearGradientWrapper>
+    </Modal>
   )
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    padding: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
   modalContent: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-  modalCardOne: {
-    width: 300,  // 80% of the screen width
-    height: '20%',
-  },
-  modalCardTwo: {
-    width: 300,  // 80% of the screen width
-    height: '40%',
+    justifyContent: 'center', // to center the card
   },
   textContainer: {
-    marginTop: 10,
+    margin: 10,
   },
   textStyle: {
-    fontSize: 18, // Font size
-    textAlign: 'center', // Center text
-    marginVertical: 5, // Margin vertical for spacing
-    fontWeight: 'bold', // Bold font weight
-    color: 'navy', // Text color
+    fontSize: 18,
+    textAlign: 'center',
+    marginVertical: 5,
+    fontWeight: 'bold',
+    color: Colors.text,
   },
-  buttonContainer: {
-    justifyContent: 'space-around', // Space out buttons evenly
-    width: '100%', // Take the full width of the card
+  cardStyle: {
+    alignItems: 'center',
+    width: 300,
+  },
+  cardStyleForCongrats: {
+    alignItems: 'center',
+    width: 300,
+    height: 100,
   }
-
 })
