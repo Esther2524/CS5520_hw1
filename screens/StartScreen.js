@@ -4,18 +4,13 @@ import InputField from '../components/InputField';
 import Card from '../components/Card';
 import Button from '../components/Button';
 import CheckBox from '../components/CheckBox';
-import GameScreen from './GameScreen';
 import Colors from '../Colors';
 
-export default function StartScreen({ userName, setUserName, userNumber, setUserNumber,
-    attemptsLeft, setAttemptsLeft, generatedNumber, setCurrentScreen, setIsGameWon }) {
-
-    const [isGuessHigher, setIsGuessHigher] = useState(false)
-    const [isGuessCorrect, setIsGuessCorrect] = useState(false)
+export default function StartScreen({ userName, setUserName, userNumber, setUserNumber, checkGuess, displayModal }) {
     const [userNameError, setUserNameError] = useState('');
     const [userNumberError, setUserNumberError] = useState('');
     const [isRobotChecked, setIsRobotChecked] = useState(false);
-    const [isModalVisible, setIsModalVisible] = useState(false);
+
 
     function handleConfirm() {
         if (!validateUserName(userName) && !validateUserNumber(userNumber)) {
@@ -31,44 +26,14 @@ export default function StartScreen({ userName, setUserName, userNumber, setUser
             // when the confirm is successfully clicked
             setUserNameError('')
             setUserNumberError('')
-            // determine if user guesses the correct number
+            // after clicking the Confrim button, determine if the user enters the correct number
             checkGuess()
             // set GameScreen modal visible
-            setIsModalVisible(true);
-            // because the user leaves the StartScreen
+            displayModal(true);
+            // if the user leaves the StartScreen, next time they come back, the checkbox should clear
             setIsRobotChecked(false);
+            // btw, we don't change the userName and userNumber entered perviously
         }
-    }
-
-    function checkGuess() {
-        const num = parseInt(userNumber, 10);
-        console.log(userNumber, generatedNumber); // for test
-        if (num === generatedNumber) {
-            setIsGuessCorrect(true);
-            setIsGameWon(true);
-        } else {
-            setIsGuessCorrect(false)
-            if (num > generatedNumber) {
-                setIsGuessHigher(true);
-            } else {
-                setIsGuessHigher(false);
-            }
-            // each time Confirm button is clicked, adjust attemptsLeft (decrement by 1)          
-            setAttemptsLeft(attemptsLeft - 1);
-        }
-    };
-
-    // Guess again (back to StartScreen)
-    function handleGuessAgain() {
-        setIsModalVisible(false);
-        setCurrentScreen('StartScreen')
-    }
-
-    // when the game is over, go to the FinishScreen
-    // 1. the user enters the correct number; 2. exceed the maximum attempts
-    function handleDone() {
-        setIsModalVisible(false);
-        setCurrentScreen('FinishScreen');
     }
 
     // valid name: non-numeric and more than 1 character
@@ -82,7 +47,7 @@ export default function StartScreen({ userName, setUserName, userNumber, setUser
     // valid number: between 1020 and 1029 (inclusive)
     function validateUserNumber(number) {
         const num = parseInt(number, 10);
-        return !isNaN(num) && num >= 1020 && num <= 1029
+        return !isNaN(num) && num >= 1020 && num <= 1029;
     }
 
     // "Reset" button: clear all the input fields and checkbox
@@ -132,17 +97,7 @@ export default function StartScreen({ userName, setUserName, userNumber, setUser
                     <Button title="Confirm" onPress={handleConfirm} disabled={!isRobotChecked} textColor={Colors.confirmButton} />
                 </View>
             </Card>
-
-            <GameScreen
-                isModalVisible={isModalVisible}
-                userName={userName}
-                userNumber={userNumber}
-                attemptsLeft={attemptsLeft}
-                isGuessCorrect={isGuessCorrect}
-                isGuessHigher={isGuessHigher}
-                handleDone={handleDone}
-                handleGuessAgain={handleGuessAgain}
-            />
+            
         </View>
     )
 }
