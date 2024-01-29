@@ -6,8 +6,7 @@ import LinearGradientWrapper from '../components/LinearGradientWrapper'
 import Colors from '../Colors'
 
 export default function GameScreen({ isModalVisible, userName, userNumber, attemptsLeft,
-  isGuessCorrect, isGuessHigher,
-  handleDone, handleGuessAgain }) {
+  isGuessCorrect, isGuessHigher, handleDone, handleGuessAgain }) {
   // Notes:
   // 1. The Modal component in React Native covers the whole screen by default, and its content is typically aligned to the top. 
   // 2. The LinearGradient should be used directly inside the Modal. It will serve as the background for all the content of the modal.
@@ -31,7 +30,12 @@ export default function GameScreen({ isModalVisible, userName, userNumber, attem
                 <Text style={styles.textStyle}>Hello {userName}</Text>
                 <Text style={styles.textStyle}>You have chosen {userNumber}</Text>
                 <Text style={styles.textStyle}>That's not my number!</Text>
-                <Text style={styles.textStyle}>{isGuessHigher ? "Guess lower!" : "Guess higher!"}</Text>
+                {/* the message "Guess lower!" or "Guess higher!" is only displayed when attemptsLeft is greater than 0 */}
+                {attemptsLeft > 0 && (
+                  <Text style={styles.textStyle}>
+                    {isGuessHigher ? "Guess lower!" : "Guess higher!"}
+                  </Text>
+                )}
                 <Text style={styles.textStyle}>
                   {attemptsLeft === 0 ? "You have no attempts left!" : `You have ${attemptsLeft} attempts left!`}
                 </Text>
