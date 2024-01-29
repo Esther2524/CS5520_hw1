@@ -13,7 +13,7 @@ export default function GameScreen({ isModalVisible, userName, userNumber, attem
   // 2. The LinearGradient should be used directly inside the Modal. It will serve as the background for all the content of the modal.
 
   return (
-    <Modal visible={isModalVisible} transparent={false}>
+    <Modal visible={isModalVisible}>
       <LinearGradientWrapper>
         <View style={styles.modalContent}>
           {isGuessCorrect ? (

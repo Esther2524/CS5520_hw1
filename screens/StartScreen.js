@@ -81,17 +81,17 @@ export default function StartScreen({ userName, setUserName, userNumber, setUser
 
     // valid number: between 1020 and 1029 (inclusive)
     function validateUserNumber(number) {
-        const num = parseInt(number, 10)
+        const num = parseInt(number, 10);
         return !isNaN(num) && num >= 1020 && num <= 1029
     }
 
     // "Reset" button: clear all the input fields and checkbox
     function handleReset() {
-        setUserName('')
-        setUserNameError('')
-        setUserNumber('')
-        setUserNumberError('')
-        setIsRobotChecked(false)
+        setUserName('');
+        setUserNameError('');
+        setUserNumber('');
+        setUserNumberError('');
+        setIsRobotChecked(false);
     }
 
 
