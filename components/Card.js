@@ -3,6 +3,11 @@ import React from 'react'
 import Colors from '../Colors'
 
 export default function Card({ children, style }) {
+    // Note:
+    // 1. 'children' is a special property that allows us to pass components as data to other components.
+    // children will be whatever is placed between <Card> and </Card> when the component is used. 
+    // 2. The style prop allows for additional styling to be applied from the parent component, 
+    // adding more customization on top of the base card style defined in styles.
     return (
         <View style={[styles.card, style]}>
             {children}
