@@ -27,7 +27,7 @@ export default function App() {
 
   // the logic of the entire game
   function checkGuess() {
-    console.log(`user input: ${userNumber}, correct number: ${generatedNumber}`); // just for test
+    console.log(`TEST user input: ${userNumber}, correct number: ${generatedNumber}`); // just for test
     const num = parseInt(userNumber, 10);
     if (num === generatedNumber) {
       setIsGuessCorrect(true);
