@@ -4,23 +4,20 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../Colors';
 
 export default function LinearGradientWrapper({ children }) {
+    // Note:
+    // The <LinearGradient> component from expo-linear-gradient is already a kind of View component that renders a gradient view.
+    // So we do not necessarily need a <View> to wrap the <LinearGradient>.
     return (
-        <View style={styles.screen}>
             <LinearGradient
                 colors={[Colors.linearColorStart, Colors.linearColorEnd]}
                 style={styles.background}
             >
                 {children}
             </LinearGradient>
-        </View>
     )
 }
 
 const styles = StyleSheet.create({
-    screen: {
-        flex: 1,
-        alignItems: 'center',
-    },
     background: {
         position: 'absolute',
         left: 0,
