@@ -1,82 +1,37 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button } from 'react-native';
-import { useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native'
+import React from 'react'
+import Home from './components/Home'
+import GoalDetails from './components/GoalDetails';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Button } from 'react-native';
 
-import Header from './components/Header';
-import Input from './components/Input';
-import { SafeAreaView } from 'react-native';
+const Stack = createNativeStackNavigator();
+console.log(Stack);
 
 export default function App() {
-  const appName = "My App"
-
-  const [data, setData] = useState("")
-  const [isVisible, setIsVisible] = useState(false)
-
-  function receiveInput(data) {
-    console.log("receive input from Input.js", data);
-    setData(data);
-    setIsVisible(false);
-  }
-
-  function dismissModal() {
-    setIsVisible(false);
-  }
-
-
-
   return (
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: { backgroundColor: "#929" },
+          headerTintColor: "white",
+          headerTitle: "All my goals"
+        }}>
 
-    <SafeAreaView style={styles.container}>
+        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen 
+        options={({route}) => ({
+          headerTitle: route.params.goalData.text,
+          headerRight: () => (<Button title="warning" color="white"/>)
 
-      <View style={styles.topView}>
-        <Text>Welcome to {appName} 🐶</Text>
-        <StatusBar style="auto" />
-        <Header name="My App" version={2} />
+        })}
+        name="Details" 
+        component={GoalDetails} />
 
-        <Button title="add a goal" onPress={() => setIsVisible(true)} />
-        <Input inputHandler={receiveInput} modalVisible={isVisible} dismissModal={dismissModal} />
-
-      </View>
-
-      <View style={styles.bottomView}>
-
-
-        <Text>{data}</Text>
-
-
-      </View>
-
-    </SafeAreaView>
-
-
-
-
-
-
-
-  );
+      </Stack.Navigator>
+    </NavigationContainer>
+  )
 }
 
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  topView: {
-    flex: 1,
-  },
-
-  bottomView: {
-    flex: 4,
-    backgroundColor: "green",
-  },
-
-  text: {
-    textAlign: "center",
-  },
-
-});
+const styles = StyleSheet.create({})
