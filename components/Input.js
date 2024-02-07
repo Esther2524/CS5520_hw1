@@ -1,89 +1,78 @@
-import { StyleSheet, TextInput, View, Button, Modal, Image } from 'react-native'
-import React, { useState } from 'react'
-
+import {
+  Button,
+  Image,
+  Modal,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import React, { useState } from "react";
 
 export default function Input({ inputHandler, modalVisible, dismissModal }) {
-
-  const [text, setText] = useState("")
-
-  //callback handler
+  const [text, setText] = useState("");
+  // callback handler
   function changeTextHandler(changedText) {
-    console.log("user is typing:", changedText)
-    setText(changedText)
-  }
+    // console.log("user is typing ", changedText);
 
+    setText(changedText);
+  }
 
   function confirmHandler() {
     inputHandler(text);
-
+    setText("");
   }
-
   function cancelHandler() {
-    // hide the model
-    dismissModal()
+    setText("");
+
+    // hide the modal
+    dismissModal();
   }
-
-
-
   return (
     <Modal visible={modalVisible}>
       <View style={styles.container}>
         <Image
+          source={{
+            uri: "https://cdn-icons-png.flaticon.com/512/2617/2617812.png",
+          }}
           style={styles.image}
-          source={
-            require("../assets/google_img.png")
-          }
         />
-    
-        <Image />
 
         <TextInput
-          placeholder='Type something'
+          placeholder="Type something"
           style={styles.input}
           value={text}
-          onChangeText={changeTextHandler} />
-
-        <View style={styles.buttonContainer}>
-
-   
-          <Button style={{}} title="Cancel" onPress={cancelHandler} />
-          <Button title="Submit" onPress={confirmHandler} />
+          onChangeText={changeTextHandler}
+        />
+        <View style={styles.buttonsContainer}>
+          <View style={styles.buttonView}>
+            <Button title="Cancel" onPress={cancelHandler} />
+          </View>
+          <View style={styles.buttonView}>
+            <Button title="Confirm" onPress={confirmHandler} disabled={!text} />
+          </View>
         </View>
-
-
-
       </View>
-
     </Modal>
-
-  )
+  );
 }
 
 const styles = StyleSheet.create({
+  buttonView: {
+    width: "30%",
+    margin: 5,
+  },
+  buttonsContainer: { flexDirection: "row" },
+  input: {
+    borderBottomWidth: 2,
+    borderBottomColor: "purple",
+    width: "50%",
+  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#999",
+    alignItems: "center",
+    justifyContent: "center",
   },
-  input: {
-    borderWidth: 1,
-    borderColor: "#777",
-    padding: 8,
-    margin: 10,
-    width: 200,
-  },
-  image: {
-    width: "95%",
-    height: "30%",
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  buttonView: {
-
-  }
-
-})
-
+  image: { width: 100, height: 100 },
+});
