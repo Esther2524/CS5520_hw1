@@ -1,17 +1,38 @@
-import { StyleSheet, Text, View } from 'react-native'
-import * as React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { Button, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
 
+export default function GoalDetails({ navigation, route }) {
+  const [warning, setWatning] = useState(false);
+  function warningHandler() {
+    console.log("warning");
+    setWatning(true);
+  }
+  // functions inside useEffect are called after the rendering
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => {
+        return <Button title="Warning" color="gray" onPress={warningHandler} />;
+      },
+    });
+  }, []);
 
-export default function GoalDetails({route}) {
   return (
     <View>
-      <Text>GoalDetails</Text>
-     <Text>{route.params.goalData.id}</Text>
-     <Text>{route.params.goalData.text}</Text>
+      {route.params ? (
+        <Text>
+          You are viewing details of {route.params.data.text} with id{" "}
+          {route.params.data.id}
+        </Text>
+      ) : (
+        <Text> "Extra details"</Text>
+      )}
+      {warning && <Text style={{ color: "red" }}>WARNING</Text>}
+      <Button
+        title="extra details"
+        onPress={() => navigation.push("Details")}
+      />
     </View>
-  )
+  );
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
