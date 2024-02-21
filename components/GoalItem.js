@@ -1,5 +1,6 @@
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
+import PressedButton from "./PressedButton";
 
 export default function GoalItem({ goalObj, deleteFunction, detailFunction }) {
   function deleteHandler() {
@@ -9,12 +10,25 @@ export default function GoalItem({ goalObj, deleteFunction, detailFunction }) {
     detailFunction(goalObj);
   }
   return (
-    <View style={styles.textContainer}>
-      <Text style={styles.text}>{goalObj.text}</Text>
+    <Pressable style={
+      ({ pressed }) => {
+        return [styles.textContainer, pressed ? styles.pressable : null,]
 
-      <Button color="black" title="X" onPress={deleteHandler} />
-      <Button color="black" title="i" onPress={goalPressHandler} />
-    </View>
+      }
+    }
+      onPress={goalPressHandler}
+      android_ripple={{ color: 'white' }}
+    >
+      <View>
+        <Text style={styles.text}>{goalObj.text}</Text>
+    
+        {/* <Button onPress={deleteHandler} title="X" /> */}
+        <PressedButton onPress={deleteHandler}/>
+        <Text>X</Text>
+
+      </View>
+
+    </Pressable>
   );
 }
 
@@ -32,5 +46,14 @@ const styles = StyleSheet.create({
     marginTop: 15,
     flexDirection: "row",
     alignItems: "center",
+  },
+  pressable: {
+    marginLeft: 10,
+    marginRight: 10,
+    backgroundColor: 'white',
+  },
+  buttonLabel: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
