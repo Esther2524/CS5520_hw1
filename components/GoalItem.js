@@ -1,6 +1,7 @@
 import { Button, Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
-import PressedButton from "./PressedButton";
+import PressableButton from "./PressableButton";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function GoalItem({ goalObj, deleteFunction, detailFunction }) {
   function deleteHandler() {
@@ -10,29 +11,28 @@ export default function GoalItem({ goalObj, deleteFunction, detailFunction }) {
     detailFunction(goalObj);
   }
   return (
-    <Pressable style={
-      ({ pressed }) => {
-        return [styles.textContainer, pressed ? styles.pressable : null,]
-
-      }
-    }
-      onPress={goalPressHandler}
-      android_ripple={{ color: 'white' }}
-    >
-      <View>
+    <View>
+      <Pressable
+        style={({ pressed }) => {
+          return [styles.textContainer, pressed && styles.pressed];
+        }}
+        onPress={goalPressHandler}
+        // android_ripple={{ color: "#e9e" }}
+      >
         <Text style={styles.text}>{goalObj.text}</Text>
-    
-        {/* <Button onPress={deleteHandler} title="X" /> */}
-        <PressedButton onPress={deleteHandler}/>
-        <Text>X</Text>
-
-      </View>
-
-    </Pressable>
+        <PressableButton onPressFunction={deleteHandler}>
+          <AntDesign name="delete" size={24} color="black" />
+        </PressableButton>
+      </Pressable>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  pressed: {
+    opacity: 0.5,
+    backgroundColor: "#e9e",
+  },
   text: {
     textAlign: "center",
     fontSize: 30,
@@ -46,14 +46,5 @@ const styles = StyleSheet.create({
     marginTop: 15,
     flexDirection: "row",
     alignItems: "center",
-  },
-  pressable: {
-    marginLeft: 10,
-    marginRight: 10,
-    backgroundColor: 'white',
-  },
-  buttonLabel: {
-    fontSize: 18,
-    fontWeight: 'bold',
   },
 });
