@@ -20,25 +20,33 @@ import { collection, onSnapshot } from "firebase/firestore";
 import { deleteFromDB, writeToDB } from "../firebase-files/firestoreHelper";
 import { database } from "../firebase-files/firebaseSetup";
 export default function Home({ navigation }) {
+  function cleanup() {}
   useEffect(() => {
     // set up a listener to get realtime data from firestore - only after the first render
-    onSnapshot(collection(database, "goals"), (querySnapshot) => {
-      if (querySnapshot.empty) {
-        Alert.alert("You need to add something");
-        return;
+    const unsubscribe = onSnapshot(
+      collection(database, "goals"),
+      (querySnapshot) => {
+        if (querySnapshot.empty) {
+          Alert.alert("You need to add something");
+          return;
+        }
+        // loop through this querySnapshot (forEach) => a bunch of docSnapshot
+        // call .data() on each documentsnapshot
+        let newArray = [];
+        querySnapshot.forEach((doc) => {
+          // update this to also add id of doc to the newArray
+          newArray.push({ ...doc.data(), id: doc.id });
+          // store this data in a new array
+        });
+        // console.log(newArray);
+        //updating the goals array with the new array
+        setGoals(newArray);
       }
-      // loop through this querySnapshot (forEach) => a bunch of docSnapshot
-      // call .data() on each documentsnapshot
-      let newArray = [];
-      querySnapshot.forEach((doc) => {
-        // update this to also add id of doc to the newArray
-        newArray.push({ ...doc.data(), id: doc.id });
-        // store this data in a new array
-      });
-      // console.log(newArray);
-      //updating the goals array with the new array
-      setGoals(newArray);
-    });
+    );
+    return () => {
+      console.log("unsubscribe");
+      unsubscribe();
+    };
   }, []);
   const appName = "My awesome app";
   // const [text, setText] = useState("");
@@ -61,7 +69,7 @@ export default function Home({ navigation }) {
     setIsModalVisible(false);
     //use this to update the text showing in the
     //Text component
-    writeToDB(newGoal);
+    writeToDB(newGoal, "goals");
   }
   function dismissModal() {
     setIsModalVisible(false);
