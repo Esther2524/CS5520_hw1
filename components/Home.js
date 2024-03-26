@@ -19,6 +19,7 @@ import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { deleteFromDB, writeToDB } from "../firebase-files/firestoreHelper";
 import { auth, database, storage } from "../firebase-files/firebaseSetup";
 import { ref, uploadBytes } from "firebase/storage";
+import LocationManager from "./LocationManager";
 export default function Home({ navigation }) {
   function cleanup() {}
   useEffect(() => {
@@ -58,7 +59,7 @@ export default function Home({ navigation }) {
   // const [text, setText] = useState("");
   const [goals, setGoals] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  
+
   async function getImageData(uri) {
     try {
       const response = await fetch(uri);
@@ -172,6 +173,7 @@ export default function Home({ navigation }) {
             );
           })} */}
         {/* </ScrollView> */}
+        <LocationManager />
       </View>
     </SafeAreaView>
   );

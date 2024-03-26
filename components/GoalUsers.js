@@ -10,7 +10,7 @@ export default function GoalUsers({ id }) {
         const usersFromDB = await getAllDocs(`goals/${id}/users`);
         console.log(usersFromDB);
         // we should check if usersFromDB is undefined
-        if (usersFromDB.length) {
+        if (usersFromDB) {
           setUsers(usersFromDB);
           return;
         }
