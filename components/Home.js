@@ -16,9 +16,9 @@ import Input from "./Input";
 import GoalItem from "./GoalItem";
 import PressableButton from "./PressableButton";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
-
 import { deleteFromDB, writeToDB } from "../firebase-files/firestoreHelper";
-import { auth, database } from "../firebase-files/firebaseSetup";
+import { auth, database, storage } from "../firebase-files/firebaseSetup";
+import { ref, uploadBytes } from "firebase/storage";
 export default function Home({ navigation }) {
   function cleanup() {}
   useEffect(() => {
@@ -58,14 +58,39 @@ export default function Home({ navigation }) {
   // const [text, setText] = useState("");
   const [goals, setGoals] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  function receiveInput(data) {
-    // console.log("recieve input ", data);
+  
+  async function getImageData(uri) {
+    try {
+      const response = await fetch(uri);
+      const imageBlob = await response.blob();
+      const imageName = uri.substring(uri.lastIndexOf("/") + 1);
+      const imageRef = ref(storage, `images/${imageName}`);
+      const uploadResult = await uploadBytes(imageRef, imageBlob);
+      return uploadResult.metadata.fullPath;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  async function receiveInput(data, imageUri) {
+    console.log("we are in Home ", imageUri);
+    let uploadImageUri = "";
+
+    try {
+      if (imageUri) {
+        uploadImageUri = await getImageData(imageUri);
+      }
+    } catch (err) {
+      console.log(err);
+    }
     // setText(data);
     //1. define a new object {text:.., id:..} and store data in object's text
     // 2. use Math.random() to set the object's id
     // const newGoal = { text: data, id: Math.random() };
     //don't need id anymore as Firestore is assigning one automatically
-    const newGoal = { text: data };
+    let newGoal = { text: data };
+    if (uploadImageUri) {
+      newGoal = { ...newGoal, imageUri: uploadImageUri };
+    }
     // const newArray = [...goals, newGoal];
     //setGoals (newArray)
     //use updater function whenever we are updating state variables based on the current value
