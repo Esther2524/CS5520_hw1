@@ -12,6 +12,7 @@ import { auth } from "./firebase-files/firebaseSetup";
 import PressableButton from "./components/PressableButton";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import Profile from "./components/Profile";
+import Map from "./components/Map";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -90,6 +91,7 @@ export default function App() {
         name="Details"
         component={GoalDetails}
       />
+      <Stack.Screen name='Map' component={Map}/>
     </>
   );
   return (

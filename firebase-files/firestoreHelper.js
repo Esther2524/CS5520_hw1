@@ -4,9 +4,19 @@ import {
   doc,
   deleteDoc,
   getDocs,
+  setDoc,
+  getDoc,
 } from "firebase/firestore";
 import { database, auth } from "./firebaseSetup";
 
+export async function setDocToDB(data, col) {
+  // the doc ID is user's uid
+  try {
+    setDoc(doc(database, col, auth.currentUser.uid), data, { merge: true });
+  } catch (err) {
+    console.log(err);
+  }
+}
 export async function writeToDB(data, col, docId, subCol) {
   try {
     if (docId) {
@@ -30,6 +40,17 @@ export async function getAllDocs(path) {
       newArray.push(doc.data());
     });
     return newArray;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function getDocFromDB(col, docId) {
+  try {
+    const docSnap = await getDoc(doc(database, col, docId));
+    if (docSnap.exists()) {
+      return docSnap.data();
+    }
   } catch (err) {
     console.log(err);
   }
