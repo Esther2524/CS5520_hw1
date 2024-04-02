@@ -1,59 +1,54 @@
-import { StyleSheet, Text, View, Button } from 'react-native';
-import React, { useState } from 'react';
+import { View, Button, Image, StyleSheet, Dimensions } from "react-native";
+import React, { useState } from "react";
 import * as Location from "expo-location";
-import MapView, { Marker } from "react-native-maps";
-
-
+import { mapsApiKey } from "@env";
 export default function LocationManager() {
-    const [errorMsg, setErrorMsg] = useState(null);
-    const [location, setLocation] = useState();
+  const [status, requestPermission] = Location.useForegroundPermissions();
+  const [location, setLocation] = useState(null);
+  async function verifyPermission() {
+    if (status.granted) {
+      return true;
+    }
+    try {
+      const permissionResponse = await requestPermission();
+      return permissionResponse.granted;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  async function locateUserHandler() {
+    // call verifypermission
 
-
-    const locationHandler = async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-            setErrorMsg("Permission to access location was denied");
-            return;
-        }
-
-        let location = await Location.getCurrentPositionAsync({});
-        setLocation({
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-        });
-    };
-
-    return (
-        <View>
-            <Button title="show location" onPress={locationHandler}/>
-            {location && (
-                <View style={styles.mapContainer}>
-                    <MapView
-                        style={styles.map}
-                        initialRegion={{
-                            latitude: location.latitude,
-                            longitude: location.longitude,
-                            latitudeDelta: 0.0922,
-                            longitudeDelta: 0.0421,
-                        }}
-                    >
-                        <Marker coordinate={location} draggable={true}/>
-                    </MapView>
-                </View>
-            )}
-
-        </View>
-    )
+    try {
+      const havePermission = await verifyPermission();
+      if (!havePermission) {
+        Alert.alert("You need to give permission");
+        return;
+      }
+      const receivedLocation = await Location.getCurrentPositionAsync();
+      setLocation({
+        latitude: receivedLocation.coords.latitude,
+        longitude: receivedLocation.coords.longitude,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  return (
+    <View>
+      <Button title="Locate me" onPress={locateUserHandler} />
+      {location && (
+        <Image
+          style={styles.image}
+          source={{
+            uri: `https://maps.googleapis.com/maps/api/staticmap?center=${location.latitude},${location.longitude}&zoom=14&size=400x200&maptype=roadmap&markers=color:red%7Clabel:L%7C${location.latitude},${location.longitude}&key=${mapsApiKey}`,
+          }}
+        />
+      )}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    mapContainer: {
-        width: 300,
-        height: 200,
-        justifyContent: "flex-end",
-        alignItems: "center",
-    },
-    map: {
-        ...StyleSheet.absoluteFillObject,
-    },
-})
+  image: { width: Dimensions.get("screen").width, height: 200 },
+});

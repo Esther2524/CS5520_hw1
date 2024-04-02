@@ -28,7 +28,6 @@ export async function getAllDocs(path) {
     let newArray = [];
     querySnapshot.forEach((doc) => {
       newArray.push(doc.data());
-      console.log(doc.data());
     });
     return newArray;
   } catch (err) {

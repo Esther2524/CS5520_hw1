@@ -22,7 +22,7 @@ export default function GoalDetails({ navigation, route }) {
 
   useEffect(() => {
     async function getImageURL() {
-      if (route.params.data) {
+      if (route.params.data.imageUri) {
         const imageUri = route.params.data.imageUri;
         const imageRef = ref(storage, imageUri);
         const imageDownloadURL = await getDownloadURL(imageRef);
